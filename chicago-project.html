@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.25">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Daniel Mend">
+<meta name="dcterms.date" content="2026-05-04">
+<meta name="description" content="This paper investigates the relationship between a Chicago census tract’s income and its access to public transit via the CTA.">
+
+<title>A Spatial Analysis of CTA Service Frequency and Socioeconomic Equity – Daniel Mend Portfolio</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-2a504c98ff87331e1512fcad2ebb3bdc.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="./index.html" class="navbar-brand navbar-brand-logo">
+    </a>
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Daniel Mend Portfolio</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-projects" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Projects</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-projects">    
+        <li>
+    <a class="dropdown-item" href="./chicago-project.html">
+ <span class="dropdown-text">CTA Spatial Equity Analysis</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./park_effect_simulator_2017.html">
+ <span class="dropdown-text">MLB Park Effect Simulator 2017</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./cook-county-heat.html">
+ <span class="dropdown-text">Cook County Heat Vulnerability</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#section-i-introduction" id="toc-section-i-introduction" class="nav-link active" data-scroll-target="#section-i-introduction">Section I: Introduction</a></li>
+  <li><a href="#section-ii-data-used" id="toc-section-ii-data-used" class="nav-link" data-scroll-target="#section-ii-data-used">Section II: Data Used</a></li>
+  <li><a href="#section-iii-methods" id="toc-section-iii-methods" class="nav-link" data-scroll-target="#section-iii-methods">Section III: Methods</a>
+  <ul class="collapse">
+  <li><a href="#phase-1-environment-setup-and-spatial-standardization" id="toc-phase-1-environment-setup-and-spatial-standardization" class="nav-link" data-scroll-target="#phase-1-environment-setup-and-spatial-standardization">Phase 1: Environment Setup and Spatial Standardization</a></li>
+  <li><a href="#phase-2-processing-transit-schedule-and-frequency-data" id="toc-phase-2-processing-transit-schedule-and-frequency-data" class="nav-link" data-scroll-target="#phase-2-processing-transit-schedule-and-frequency-data">Phase 2: Processing Transit Schedule and Frequency Data</a></li>
+  <li><a href="#phase-3-spatial-subsetting" id="toc-phase-3-spatial-subsetting" class="nav-link" data-scroll-target="#phase-3-spatial-subsetting">Phase 3: Spatial Subsetting</a></li>
+  <li><a href="#phase-4-accessibility-matrix-calculations" id="toc-phase-4-accessibility-matrix-calculations" class="nav-link" data-scroll-target="#phase-4-accessibility-matrix-calculations">Phase 4: Accessibility Matrix Calculations</a></li>
+  </ul></li>
+  <li><a href="#section-iv-results" id="toc-section-iv-results" class="nav-link" data-scroll-target="#section-iv-results">Section IV: Results</a>
+  <ul class="collapse">
+  <li><a href="#statistical-tests" id="toc-statistical-tests" class="nav-link" data-scroll-target="#statistical-tests">Statistical Tests</a></li>
+  <li><a href="#visualizations-and-scatterplots" id="toc-visualizations-and-scatterplots" class="nav-link" data-scroll-target="#visualizations-and-scatterplots">Visualizations and Scatterplots</a></li>
+  <li><a href="#bivariate-choropleth-map" id="toc-bivariate-choropleth-map" class="nav-link" data-scroll-target="#bivariate-choropleth-map">Bivariate Choropleth Map</a></li>
+  <li><a href="#spatial-autocorrelation-lisa-analysis" id="toc-spatial-autocorrelation-lisa-analysis" class="nav-link" data-scroll-target="#spatial-autocorrelation-lisa-analysis">Spatial Autocorrelation (LISA Analysis)</a></li>
+  </ul></li>
+  <li><a href="#section-v-conclusion-and-limitations" id="toc-section-v-conclusion-and-limitations" class="nav-link" data-scroll-target="#section-v-conclusion-and-limitations">Section V: Conclusion and Limitations</a>
+  <ul class="collapse">
+  <li><a href="#study-limitations" id="toc-study-limitations" class="nav-link" data-scroll-target="#study-limitations">Study Limitations</a>
+  <ul class="collapse">
+  <li><a href="#exclusion-of-regional-transit-networks" id="toc-exclusion-of-regional-transit-networks" class="nav-link" data-scroll-target="#exclusion-of-regional-transit-networks">1. Exclusion of Regional Transit Networks</a></li>
+  <li><a href="#proximity-vs.-connectivity" id="toc-proximity-vs.-connectivity" class="nav-link" data-scroll-target="#proximity-vs.-connectivity">2. Proximity vs.&nbsp;Connectivity:</a></li>
+  <li><a href="#centroid-generalization" id="toc-centroid-generalization" class="nav-link" data-scroll-target="#centroid-generalization">3. Centroid Generalization:</a></li>
+  <li><a href="#physical-barriers-and-walkability" id="toc-physical-barriers-and-walkability" class="nav-link" data-scroll-target="#physical-barriers-and-walkability">4. Physical Barriers and Walkability:</a></li>
+  </ul></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
+  </ul></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">A Spatial Analysis of CTA Service Frequency and Socioeconomic Equity</h1>
+</div>
+
+<div>
+  <div class="description">
+    This paper investigates the relationship between a Chicago census tract’s income and its access to public transit via the CTA.
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Daniel Mend </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">May 4, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/bivariate_map.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></p>
+</figure>
+</div>
+<section id="section-i-introduction" class="level1">
+<h1>Section I: Introduction</h1>
+<p>An equitable public transit system is the foundation of urban mobility, serving as a vital link between a city’s low-income residents and essential services such as healthcare, education, and employment. Beyond just individual transportation, strong transit systems provide broad societal benefits by reducing carbon emissions and lowering street traffic. Because of Chicago’s history of segregation, the distribution of CTA services serves as a critical measure of whether the city is meeting its commitment to social equity.</p>
+<p>This project investigates whether Chicago’s CTA infrastructure provides its services in an equitable manner across areas of different income levels. The central research question asks: is there a statistically significant correlation between a Chicago census tract’s median household income and its level of transit accessibility? In this study, accessibility is defined not as just the physical presence of a stop but as a combination of proximity and service frequency during peak hours.</p>
+<p>I hypothesize that there is a statistically significant positive association between income and transit accessibility. Specifically, I predict that lower-income tracts will show lower frequency-weighted accessibility scores compared to high-income tracts.</p>
+<p>Previous studies have characterized Chicago’s relationship between transit and income as a “transit divide” (Owen et al., 2023). Multiple linear regression has been used to show that “L” ridership often increases with higher median incomes in the city, while low-income residents rely primarily on bus services for daily transportation (Almagro et al., 2024; Owen et al., 2023). While past studies have traditionally focused on identifying “transit deserts” based purely on physical distance and spatial segregation (Tehrani et al., 2019) , more recent work shows that service frequency and reliability are the most important transit accessibility attributes for different income groups and transit-dependent users (Tao et al., 2022). This project builds on this literature by using a frequency-weighted spatial metric (<span class="math inline">\(A_{i}\)</span>) to provide a better understanding of how service quality is distributed across Chicago.</p>
+</section>
+<section id="section-ii-data-used" class="level1">
+<h1>Section II: Data Used</h1>
+<p>In this project, I used spatial and temporal data provided by the CTA to calculate accessibility, alongside population-weighted tract centroids and demographic data from the Census Bureau to measure socioeconomic status. The datasets were selected to allow for spatial analysis of both tract-level proximity to transit and rush hour service frequency. Additionally, community area boundary data was used to subset our findings to Chicago.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Data Category</th>
+<th style="text-align: left;">Official Name and Link</th>
+<th style="text-align: left;">Period and Version</th>
+<th style="text-align: left;">Resolution / Scale</th>
+<th style="text-align: left;">Citation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>Stop Proximity</strong></td>
+<td style="text-align: left;"><a href="https://data.cityofchicago.org/Transportation/CTA-Bus-Stops-Shapefile/pxug-u72f">CTA Bus and ‘L’ Rail Stops Shapefiles</a></td>
+<td style="text-align: left;">Current (Updated Nov 2023)</td>
+<td style="text-align: left;">Point-level (Chicago and Suburbs)</td>
+<td style="text-align: left;">(CTA, 2023)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Service Frequency</strong></td>
+<td style="text-align: left;"><a href="https://www.transitchicago.com/developers/gtfs/">CTA GTFS Schedule Data</a></td>
+<td style="text-align: left;">Spring 2024 Schedule</td>
+<td style="text-align: left;">Route/Stop-level (minutes)</td>
+<td style="text-align: left;">(CTA, 2024)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Study Area Boundary</strong></td>
+<td style="text-align: left;"><a href="https://data.cityofchicago.org/Facilities-Geographic-Boundaries/Boundaries-Community-Areas-Map/cauq-8yn6">Boundaries - Community Areas</a></td>
+<td style="text-align: left;">Current (Downloaded April 2026)</td>
+<td style="text-align: left;">Polygon-level (77 areas) Point-level (Tract Mean Centers)</td>
+<td style="text-align: left;">(City of Chicago, 2026)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Population Centroids</strong></td>
+<td style="text-align: left;"><a href="https://www.census.gov/geographies/reference-files/time-series/geo/centers-population.html">2020 Centers of Population</a></td>
+<td style="text-align: left;">2020 Decennial</td>
+<td style="text-align: left;">Point-level (Tract Mean Centers)</td>
+<td style="text-align: left;">(U.S. Census Bureau, 2021)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Income Data</strong></td>
+<td style="text-align: left;"><a href="https://www.census.gov/programs-surveys/acs.html">ACS 5-Year Estimates</a></td>
+<td style="text-align: left;">2018-2022</td>
+<td style="text-align: left;">Census Tracts (Cook County)</td>
+<td style="text-align: left;">(U.S. Census Bureau, 2023)</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="section-iii-methods" class="level1">
+<h1>Section III: Methods</h1>
+<p>To investigate the association between transit accessibility and median household income, a spatial analysis pipeline was developed.</p>
+<section id="phase-1-environment-setup-and-spatial-standardization" class="level2">
+<h2 class="anchored" data-anchor-id="phase-1-environment-setup-and-spatial-standardization">Phase 1: Environment Setup and Spatial Standardization</h2>
+<p>My first phase of analysis involved standardizing the spatial scale and CRS of all datasets. To ensure accurate measurements, all spatial objects were projected from their original coordinate systems into UTM Zone 16N, which uses meters as its standard unit. In addition, tracts without median household income data were removed from the dataset to prevent errors in later statistical tests.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidycensus)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(units)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(biscale)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(cowplot)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(spdep)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>centroids_raw <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://www2.census.gov/geo/docs/reference/cenpop2020/tract/CenPop2020_Mean_TR17.txt"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>cook_centroids <span class="ot">&lt;-</span> centroids_raw <span class="sc">%&gt;%</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(COUNTYFP <span class="sc">==</span> <span class="st">"031"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">GEOID =</span> <span class="fu">paste0</span>(STATEFP, COUNTYFP, TRACTCE)) <span class="sc">%&gt;%</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_as_sf</span>(<span class="at">coords =</span> <span class="fu">c</span>(<span class="st">"LONGITUDE"</span>, <span class="st">"LATITUDE"</span>), <span class="at">crs =</span> <span class="dv">4326</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_transform</span>(<span class="dv">26916</span>) <span class="co"># Project to UTM Zone 16N</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>cook_tracts <span class="ot">&lt;-</span> <span class="fu">get_acs</span>(</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">geography =</span> <span class="st">"tract"</span>,</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">state =</span> <span class="st">"IL"</span>,</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">county =</span> <span class="st">"Cook"</span>,</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">variables =</span> <span class="fu">c</span>(<span class="at">median_income =</span> <span class="st">"B19013_001"</span>),</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">geometry =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">year =</span> <span class="dv">2022</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_transform</span>(<span class="dv">26916</span>)</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>cook_tracts <span class="ot">&lt;-</span> cook_tracts <span class="sc">%&gt;%</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(GEOID, <span class="at">median_income =</span> estimate, geometry)</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>cook_centroids <span class="ot">&lt;-</span> cook_centroids <span class="sc">%&gt;%</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(<span class="fu">st_drop_geometry</span>(cook_tracts), <span class="at">by =</span> <span class="st">"GEOID"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+</section>
+<section id="phase-2-processing-transit-schedule-and-frequency-data" class="level2">
+<h2 class="anchored" data-anchor-id="phase-2-processing-transit-schedule-and-frequency-data">Phase 2: Processing Transit Schedule and Frequency Data</h2>
+<p>Transit accessibility was modeled as a spatial metric based on distance from a stop and the service frequency at the stop. First, CTA schedule data was filtered to isolate weekday rush hour periods. These were defined as arrivals between 7 AM to 9 AM and 5 PM to 7 PM. The total number of arrivals was then aggregated and divided by four to calculate the average number of buses per hour.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load CTA Stops</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>stops <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">'data/stops.txt'</span>) <span class="co"># Adjust file path as needed</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>stops_sf <span class="ot">&lt;-</span> <span class="fu">st_as_sf</span>(</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  stops,</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">coords =</span> <span class="fu">c</span>(<span class="st">"stop_lon"</span>, <span class="st">"stop_lat"</span>),</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">crs =</span> <span class="dv">4326</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_transform</span>(<span class="dv">26916</span>)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>stop_times <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">'data/stop_times.txt'</span>) <span class="co"># Adjust file path as needed</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>peak_times <span class="ot">&lt;-</span> stop_times <span class="sc">%&gt;%</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">hour =</span> <span class="fu">as.integer</span>(<span class="fu">substr</span>(arrival_time, <span class="dv">1</span>, <span class="dv">2</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>((hour <span class="sc">&gt;=</span> <span class="dv">7</span> <span class="sc">&amp;</span> hour <span class="sc">&lt;</span> <span class="dv">9</span>) <span class="sc">|</span> (hour <span class="sc">&gt;=</span> <span class="dv">17</span> <span class="sc">&amp;</span> hour <span class="sc">&lt;</span> <span class="dv">19</span>))</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>freq_by_stop <span class="ot">&lt;-</span> peak_times <span class="sc">%&gt;%</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(stop_id) <span class="sc">%&gt;%</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">total_peak_arrivals =</span> <span class="fu">n</span>(),</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">buses_per_hour =</span> total_peak_arrivals <span class="sc">/</span> <span class="dv">4</span>)</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>stops_with_freq <span class="ot">&lt;-</span> stops_sf <span class="sc">%&gt;%</span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(freq_by_stop, <span class="at">by =</span> <span class="st">"stop_id"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(buses_per_hour))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+</section>
+<section id="phase-3-spatial-subsetting" class="level2">
+<h2 class="anchored" data-anchor-id="phase-3-spatial-subsetting">Phase 3: Spatial Subsetting</h2>
+<p>To isolate the analysis strictly to Chicago and avoid confounding variables from suburban transit systems, the study area was subsetted to Chicago city limits. This was achieved by first dissolving Chicago’s community area boundaries into a single unified polygon, then using a spatial intersection to filter Cook County tracts, population centroids, and CTA stops to those that fell within the city boundary.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Import community areas to establish the Chicago boundary</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>comm_areas <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">'data/Boundaries_-_Community_Areas_20260412.csv'</span>) <span class="co"># Adjust file path as needed</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>comm_areas_sf <span class="ot">&lt;-</span> <span class="fu">st_as_sf</span>(comm_areas, <span class="at">wkt =</span> <span class="st">"the_geom"</span>, <span class="at">crs =</span> <span class="dv">4326</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_transform</span>(<span class="dv">26916</span>)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a single merged polygon of Chicago</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>chicago_boundary <span class="ot">&lt;-</span> <span class="fu">st_union</span>(comm_areas_sf)</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Subset tracts, centroids, and stops to only those inside Chicago</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>tracts_chi <span class="ot">&lt;-</span> cook_tracts[<span class="fu">st_intersects</span>(cook_tracts, chicago_boundary, <span class="at">sparse =</span> <span class="cn">FALSE</span>), ]</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>centroids_chi <span class="ot">&lt;-</span> cook_centroids[<span class="fu">st_intersects</span>(cook_centroids, chicago_boundary, <span class="at">sparse =</span> <span class="cn">FALSE</span>), ]</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>stops_chi <span class="ot">&lt;-</span> stops_with_freq[<span class="fu">st_intersects</span>(stops_with_freq, chicago_boundary, <span class="at">sparse =</span> <span class="cn">FALSE</span>), ]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+</section>
+<section id="phase-4-accessibility-matrix-calculations" class="level2">
+<h2 class="anchored" data-anchor-id="phase-4-accessibility-matrix-calculations">Phase 4: Accessibility Matrix Calculations</h2>
+<p>Next, a distance matrix was calculated between the population-weighted centroid of each census tract and every CTA stop in Chicago. The final accessibility index was calculated as follows:</p>
+<p><span class="math display">\[A_{i} = \sum_{j=1}^{n} \frac{F_{j}}{d_{ij}^2}\]</span></p>
+<p>Here, <span class="math inline">\(F_{j}\)</span> represents service frequency at stop <span class="math inline">\(j\)</span> and <span class="math inline">\(d_{ij}\)</span> is that stop’s distance from the population-weighted centroid of tract <span class="math inline">\(i\)</span>. To prevent extreme mathematical inflation caused by squaring small distances in meters, the distance matrix was converted to kilometers. Two spatial thresholds were enforced during this calculation. Any stop further than 0.8 km from a tract’s centroid was excluded from the accessibility score to reflect an approximate ten-minute walk. Additionally, a minimum distance threshold of 0.1 km was enforced in order to prevent infinite accessibility spikes when a centroid lands directly on a stop coordinate. Because transit accessibility scores are highly skewed (with a high number of stops in the Loop especially), a log-transformation was applied to the accessibility index to normalize the data for linear regression.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Calculate distance matrix (Outputs ~800 x 11,000 matrix in meters)</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>dist_matrix <span class="ot">&lt;-</span> <span class="fu">st_distance</span>(centroids_chi, stops_chi)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Convert meters to kilometers instantly without 'set_units' overhead</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>dist_numeric <span class="ot">&lt;-</span> units<span class="sc">::</span><span class="fu">drop_units</span>(dist_matrix) <span class="sc">/</span> <span class="dv">1000</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Enforce 800m (0.8km) walking threshold</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>dist_numeric[dist_numeric <span class="sc">&gt;</span> <span class="fl">0.8</span>] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. Enforce 100m (0.1km) minimum distance threshold</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>dist_numeric[dist_numeric <span class="sc">&lt;</span> <span class="fl">0.1</span>] <span class="ot">&lt;-</span> <span class="fl">0.1</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="co"># 5. Extract frequencies vector</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>frequencies <span class="ot">&lt;-</span> stops_chi<span class="sc">$</span>buses_per_hour</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="co"># 6. Apply frequency-weighted gravity formula</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>access_scores <span class="ot">&lt;-</span> <span class="fu">apply</span>(dist_numeric, <span class="dv">1</span>, <span class="cf">function</span>(dists) {</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sum</span>(frequencies <span class="sc">/</span> (dists<span class="sc">^</span><span class="dv">2</span>), <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a><span class="co"># 7. Assign scores back to tracts</span></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>centroids_chi<span class="sc">$</span>transit_access <span class="ot">&lt;-</span> access_scores</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>tracts_chi <span class="ot">&lt;-</span> tracts_chi <span class="sc">%&gt;%</span></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(<span class="fu">st_drop_geometry</span>(centroids_chi <span class="sc">%&gt;%</span> <span class="fu">select</span>(GEOID, transit_access)), <span class="at">by =</span> <span class="st">"GEOID"</span>)</span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a><span class="co"># 8. Filter missing data</span></span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>tracts_chi_clean <span class="ot">&lt;-</span> tracts_chi <span class="sc">%&gt;%</span></span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(median_income), <span class="sc">!</span><span class="fu">is.na</span>(transit_access))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+</section>
+</section>
+<section id="section-iv-results" class="level1">
+<h1>Section IV: Results</h1>
+<p>The hypothesis of this study was that census tracts with lower median household incomes would experience significantly lower transit accessibility. Based on the statistical analysis, this hypothesis is rejected.</p>
+<section id="statistical-tests" class="level2">
+<h2 class="anchored" data-anchor-id="statistical-tests">Statistical Tests</h2>
+<p>A Spearman’s rank correlation was conducted to evaluate the association between median household income and log-transformed accessibility score, as it works well with non-normal data. The results indicate a very weak, positive correlation that was not statistically significant (<span class="math inline">\(p = 0.65\)</span>). In addition, a simple linear regression model confirmed these findings. Median household income was not a significant predictor of transit accessibility and the model explained virtually none of the variance in the data (<span class="math inline">\(R^{2} = 0.0003\)</span>).</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Spearman Rank Correlation</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>cor_test <span class="ot">&lt;-</span> <span class="fu">cor.test</span>(</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  tracts_chi_clean<span class="sc">$</span>median_income, </span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  tracts_chi_clean<span class="sc">$</span>transit_access, </span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">"spearman"</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(cor_test)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Spearman's rank correlation rho
+
+data:  tracts_chi_clean$median_income and tracts_chi_clean$transit_access
+S = 77504448, p-value = 0.6498
+alternative hypothesis: true rho is not equal to 0
+sample estimates:
+       rho 
+0.01629196 </code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Simple Linear Regression</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>regression_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">log1p</span>(transit_access) <span class="sc">~</span> median_income, <span class="at">data =</span> tracts_chi_clean)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(regression_model)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = log1p(transit_access) ~ median_income, data = tracts_chi_clean)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-8.8449 -0.3653  0.0505  0.5459  2.6294 
+
+Coefficients:
+                Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)    8.888e+00  7.032e-02 126.391   &lt;2e-16 ***
+median_income -3.950e-07  8.195e-07  -0.482     0.63    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.9546 on 777 degrees of freedom
+Multiple R-squared:  0.0002989, Adjusted R-squared:  -0.0009877 
+F-statistic: 0.2324 on 1 and 777 DF,  p-value: 0.6299</code></pre>
+</div>
+</div>
+</section>
+<section id="visualizations-and-scatterplots" class="level2">
+<h2 class="anchored" data-anchor-id="visualizations-and-scatterplots">Visualizations and Scatterplots</h2>
+<p>The scatterplot below illustrates this lack of correlation. While accessibility scores varied drastically, this variance occurs acros all income brackets. Tracts with both the highest and lowest median incomes experience a wide range of transit service levels. The red regression line remains virtually flat across all income levels.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(tracts_chi_clean, <span class="fu">aes</span>(<span class="at">x =</span> median_income, <span class="at">y =</span> transit_access)) <span class="sc">+</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>, <span class="at">color =</span> <span class="st">"darkblue"</span>) <span class="sc">+</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">color =</span> <span class="st">"red"</span>, <span class="at">se =</span> <span class="cn">TRUE</span>) <span class="sc">+</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_log10</span>() <span class="sc">+</span> </span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">dollar_format</span>()) <span class="sc">+</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Correlation: Income vs. Transit Accessibility"</span>,</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Median Household Income"</span>,</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Transit Accessibility Score (Log Scale)"</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chicago-project_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="bivariate-choropleth-map" class="level2">
+<h2 class="anchored" data-anchor-id="bivariate-choropleth-map">Bivariate Choropleth Map</h2>
+<p>Tracts were classified into <span class="math inline">\(3\times3\)</span> quantiles based on income and accessibility to construct a bivariate choropleth map. This lack of correlation is visually apparent. Although there are pockets of transit inequity based on income—specifically in Chicago’s South Side—there are many more tracts that do not fit our hypothesis, either exhibiting high transit accessibility and low median income, or low accessibility and high income.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Classify into 3x3 quantiles</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>data_bivariate <span class="ot">&lt;-</span> <span class="fu">bi_class</span>(</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  tracts_chi_clean, </span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> median_income, </span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> transit_access, </span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">style =</span> <span class="st">"quantile"</span>, </span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">dim =</span> <span class="dv">3</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate Map</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>map_bi <span class="ot">&lt;-</span> <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> data_bivariate, <span class="fu">aes</span>(<span class="at">fill =</span> bi_class), <span class="at">color =</span> <span class="st">"white"</span>, <span class="at">size =</span> <span class="fl">0.1</span>, <span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bi_scale_fill</span>(<span class="at">pal =</span> <span class="st">"DkBlue"</span>, <span class="at">dim =</span> <span class="dv">3</span>) <span class="sc">+</span> </span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_void</span>() <span class="sc">+</span></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Bivariate Map: Income and Transit Accessibility"</span>)</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate 3x3 Legend</span></span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>legend_bi <span class="ot">&lt;-</span> <span class="fu">bi_legend</span>(<span class="at">pal =</span> <span class="st">"DkBlue"</span>, <span class="at">dim =</span> <span class="dv">3</span>, <span class="at">xlab =</span> <span class="st">"Higher Income"</span>, <span class="at">ylab =</span> <span class="st">"Higher Access"</span>, <span class="at">size =</span> <span class="dv">8</span>)</span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Combine Map and Legend</span></span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a><span class="fu">ggdraw</span>() <span class="sc">+</span></span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">draw_plot</span>(map_bi, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">draw_plot</span>(legend_bi, <span class="fl">0.1</span>, <span class="fl">0.1</span>, <span class="fl">0.25</span>, <span class="fl">0.25</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chicago-project_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="spatial-autocorrelation-lisa-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="spatial-autocorrelation-lisa-analysis">Spatial Autocorrelation (LISA Analysis)</h2>
+<p>While transit accessibility is not strictly tied to income, a LISA analysis reveals that it is highly dependent on spatial geography. A Local Indicators of Spatial Association (LISA) analysis was conducted using local Moran’s I to allow for spatial categorization of statistically significant clusters.</p>
+<p>The analysis identified distinct “High-high” clusters (transit hubs) located around the northern lakefront and downtown Loop area. Conversely, significant “Low-Low” clusters (transit deserts) can be found in peripheral areas of the city, specifically the far northwest and southwest sides. This suggests that transit inequity is less a result of income inequality and far more related to urban core vs.&nbsp;outer city spatial dynamics.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create spatial weights matrix</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>neighbors <span class="ot">&lt;-</span> <span class="fu">poly2nb</span>(tracts_chi_clean)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>weights <span class="ot">&lt;-</span> <span class="fu">nb2listw</span>(neighbors, <span class="at">style =</span> <span class="st">"W"</span>, <span class="at">zero.policy =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Run Local Moran's I</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>lisa <span class="ot">&lt;-</span> <span class="fu">localmoran</span>(<span class="fu">log1p</span>(tracts_chi_clean<span class="sc">$</span>transit_access), weights, <span class="at">zero.policy =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Categorize into High-High, Low-Low clusters</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>tracts_chi_clean <span class="ot">&lt;-</span> tracts_chi_clean <span class="sc">%&gt;%</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">access_scaled =</span> <span class="fu">as.numeric</span>(<span class="fu">scale</span>(<span class="fu">log1p</span>(transit_access))), </span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">lag_access =</span> <span class="fu">as.numeric</span>(<span class="fu">lag.listw</span>(weights, access_scaled, <span class="at">zero.policy =</span> <span class="cn">TRUE</span>)), </span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">lisa_p =</span> <span class="fu">as.numeric</span>(lisa[, <span class="st">"Pr(z != E(Ii))"</span>]), </span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">cluster =</span> <span class="fu">case_when</span>(</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>      lisa_p <span class="sc">&gt;</span> <span class="fl">0.05</span> <span class="sc">~</span> <span class="st">"Not Significant"</span>,</span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>      access_scaled <span class="sc">&gt;</span> <span class="dv">0</span> <span class="sc">&amp;</span> lag_access <span class="sc">&gt;</span> <span class="dv">0</span> <span class="sc">~</span> <span class="st">"High-High (Transit Hubs)"</span>,</span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>      access_scaled <span class="sc">&lt;</span> <span class="dv">0</span> <span class="sc">&amp;</span> lag_access <span class="sc">&lt;</span> <span class="dv">0</span> <span class="sc">~</span> <span class="st">"Low-Low (Transit Deserts)"</span>,</span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>      access_scaled <span class="sc">&gt;</span> <span class="dv">0</span> <span class="sc">&amp;</span> lag_access <span class="sc">&lt;</span> <span class="dv">0</span> <span class="sc">~</span> <span class="st">"High-Low (Spatial Outlier)"</span>,</span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>      access_scaled <span class="sc">&lt;</span> <span class="dv">0</span> <span class="sc">&amp;</span> lag_access <span class="sc">&gt;</span> <span class="dv">0</span> <span class="sc">~</span> <span class="st">"Low-High (Spatial Outlier)"</span></span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the LISA Clusters</span></span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(tracts_chi_clean) <span class="sc">+</span></span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="fu">aes</span>(<span class="at">fill =</span> cluster), <span class="at">color =</span> <span class="st">"white"</span>, <span class="at">size =</span> <span class="fl">0.1</span>) <span class="sc">+</span></span>
+<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(</span>
+<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a>    <span class="st">"High-High (Transit Hubs)"</span> <span class="ot">=</span> <span class="st">"red"</span>, </span>
+<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Low-Low (Transit Deserts)"</span> <span class="ot">=</span> <span class="st">"blue"</span>,</span>
+<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a>    <span class="st">"High-Low (Spatial Outlier)"</span> <span class="ot">=</span> <span class="st">"pink"</span>, </span>
+<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Low-High (Spatial Outlier)"</span> <span class="ot">=</span> <span class="st">"lightblue"</span>,</span>
+<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Not Significant"</span> <span class="ot">=</span> <span class="st">"grey90"</span></span>
+<span id="cb12-33"><a href="#cb12-33" aria-hidden="true" tabindex="-1"></a>  )) <span class="sc">+</span></span>
+<span id="cb12-34"><a href="#cb12-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_void</span>() <span class="sc">+</span></span>
+<span id="cb12-35"><a href="#cb12-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb12-36"><a href="#cb12-36" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"LISA Clusters: Transit Accessibility in Chicago"</span>,</span>
+<span id="cb12-37"><a href="#cb12-37" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"Cluster Type"</span></span>
+<span id="cb12-38"><a href="#cb12-38" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="chicago-project_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="section-v-conclusion-and-limitations" class="level1">
+<h1>Section V: Conclusion and Limitations</h1>
+<section id="study-limitations" class="level2">
+<h2 class="anchored" data-anchor-id="study-limitations">Study Limitations</h2>
+<p>While this analysis provides a broad spatial overview of CTA service frequency, several limitations should be acknowledged.</p>
+<section id="exclusion-of-regional-transit-networks" class="level3">
+<h3 class="anchored" data-anchor-id="exclusion-of-regional-transit-networks">1. Exclusion of Regional Transit Networks</h3>
+<p>This study exclusively measured accessibility based on CTA service. Peripheral areas of Chicago may be better served by regional rail lines such as Metra and may not be as severe of transit deserts as our analysis suggests.</p>
+</section>
+<section id="proximity-vs.-connectivity" class="level3">
+<h3 class="anchored" data-anchor-id="proximity-vs.-connectivity">2. Proximity vs.&nbsp;Connectivity:</h3>
+<p>The accessibility metric factors in distance and service frequency but fails to account for destination utility. A stop servicing 20 buses an hour is scored highly even if these buses don’t connect residents to meaningful services.</p>
+</section>
+<section id="centroid-generalization" class="level3">
+<h3 class="anchored" data-anchor-id="centroid-generalization">3. Centroid Generalization:</h3>
+<p>Distances were calculated using a single centroid for each census tract. In reality, a resident living on the edge of a large census tract might not be well-represented by the tract estimates used in this study.</p>
+</section>
+<section id="physical-barriers-and-walkability" class="level3">
+<h3 class="anchored" data-anchor-id="physical-barriers-and-walkability">4. Physical Barriers and Walkability:</h3>
+<p>The distance matrix uses Euclidean distance, assuming people can walk in a straight line and ignoring physical barriers that alter true walking distance.</p>
+</section>
+</section>
+<section id="summary" class="level2">
+<h2 class="anchored" data-anchor-id="summary">Summary</h2>
+<p>Statistical tests disproved the initial hypothesis, instead suggesting that there is no significant relationship between transit accessibility and median household income across Chicago census tracts. Instead of an income-based “transit divide,” the spatial and LISA analyses demonstrated that transit accessibility in Chicago is primarily a core-periphery geographic dynamic. High-frequency transit hubs are clustered around the lakefront and downtown while transit deserts can be found on Chicago’s far South and Northwest sides. To build on these findings, future studies should utilize street-network analysis instead of Euclidean distances , integrate block-level population data, and incorporate route utility and regional transit networks such as Metra and Pace to construct a comprehensive picture of transit equity in Chicago.</p>
+</section>
+</section>
+<section id="references" class="level1">
+<h1>References</h1>
+<p>Almagro, M., Barbieri, F., Castillo, J. C., Hickok, N., &amp; Salz, T. (2024). Optimal urban transportation policy: Evidence from Chicago. SSRN Electronic Journal. https://doi.org/10.2139/ssrn.4735846</p>
+<p>Chicago Transit Authority. (2023). CTA Bus and ‘L’ Rail Stops Shapefiles [Data set]. Chicago Data Portal. https://data.cityofchicago.org/</p>
+<p>Chicago Transit Authority. (2024). CTA GTFS Schedule Data [Data set]. Chicago Transit Authority Developer Center. https://www.transitchicago.com/developers/gtfs/</p>
+<p>City of Chicago. (2026). Boundaries - Community Areas (current) [Data set]. Chicago Data Portal. https://data.cityofchicago.org/</p>
+<p>Owen, D., Arribas-Bel, D., &amp; Rowe, F. (2023). Tracking the transit divide: A multilevel modelling approach of urban inequalities and train ridership disparities in Chicago. Sustainability, 15(11), 8821. https://doi.org/10.3390/su15118821</p>
+<p>Tao, S., He, S., Ettema, D., &amp; Luo, S. (2022). The role of transit accessibility in influencing the activity space and non-work activity participation of different income groups. Journal of Transport and Land Use, 15. https://doi.org/10.5198/jtlu.2022.2075</p>
+<p>Tehrani, S. O., Wu, S. J., &amp; Roberts, J. D. (2019). The color of health: Residential segregation, light rail transit developments, and gentrification in the United States. International Journal of Environmental Research and Public Health, 16(19), 3683. https://doi.org/10.3390/ijerph16193683</p>
+<p>U.S. Census Bureau. (2021). 2020 Centers of Population by Census Tract [Data set]. U.S. Department of Commerce. https://www.census.gov/geographies/reference-files/time-series/geo/centers-population.html</p>
+<p>U.S. Census Bureau. (2023). American Community Survey 5-Year Estimates, 2018-2022 [Data set]. U.S. Department of Commerce. https://www.census.gov/programs/acs</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/Dmend35\.github\.io\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

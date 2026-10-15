@@ -1,0 +1,163 @@
+[
+  {
+    "objectID": "cook-county-heat.html",
+    "href": "cook-county-heat.html",
+    "title": "Cook County Heat Vulnerability",
+    "section": "",
+    "text": "Mean summer 2022 land surface temperature by census tract"
+  },
+  {
+    "objectID": "cook-county-heat.html#project-overview",
+    "href": "cook-county-heat.html#project-overview",
+    "title": "Cook County Heat Vulnerability",
+    "section": "Project Overview",
+    "text": "Project Overview\nExtreme heat affects neighborhoods unevenly. Even within Cook County, land surface temperatures vary by more than 15 °C between tracts near forest preserves and treeless industrial corridors, and those differences often overlap with long-standing patterns of disinvestment.\nThis project asks three questions:\n\nWhere is heat clustered? Are hot tracts randomly scattered, or do they form statistically significant hotspots?\nWho is exposed? How do hotspot neighborhoods differ in income, poverty, race/ethnicity, age and housing tenure?\nWhat drives heat locally, and does that vary across space? Is the cooling effect of tree canopy the same everywhere?"
+  },
+  {
+    "objectID": "cook-county-heat.html#interactive-dashboard",
+    "href": "cook-county-heat.html#interactive-dashboard",
+    "title": "Cook County Heat Vulnerability",
+    "section": "Interactive Dashboard",
+    "text": "Interactive Dashboard\nClick any tract to see its temperature, tree canopy, local regression results and how its predictors compare with the county average. The buttons above the map switch between surface temperature, local R², the tree-canopy coefficient and LISA clusters.\n\n\n\n\nOpen the dashboard full screen ↗"
+  },
+  {
+    "objectID": "cook-county-heat.html#data-sources",
+    "href": "cook-county-heat.html#data-sources",
+    "title": "Cook County Heat Vulnerability",
+    "section": "Data Sources",
+    "text": "Data Sources\n\n\n\n\n\n\n\n\nDataset\nProvider\nUsed for\n\n\n\n\n2022 TIGER/Line census tracts and area water\nU.S. Census Bureau\nTract geometry; water masking\n\n\nACS 2022 5-Year estimates\nU.S. Census Bureau\nIncome, poverty, race/ethnicity, age 65+, renter share\n\n\nLandsat 8/9 Collection 2 surface temperature, Jun–Aug 2022\nUSGS via Microsoft Planetary Computer\nLand surface temperature (LST)\n\n\nNLCD 2021 Tree Canopy Cover\nUSFS / MRLC\n% tree canopy\n\n\nNLCD 2021 Impervious Surface\nUSGS / MRLC\n% impervious surface\n\n\n\nAll 16 cloud-filtered Landsat scenes from summer 2022 were composited per pixel (median of 6 clear observations), and tract means were taken over land area only, after erasing Lake Michigan and other water, so lakefront tracts aren’t biased cool. One all-water tract is excluded, leaving n = 1,331."
+  },
+  {
+    "objectID": "cook-county-heat.html#methods",
+    "href": "cook-county-heat.html#methods",
+    "title": "Cook County Heat Vulnerability",
+    "section": "Methods",
+    "text": "Methods\n1. Feature reduction. The five ACS predictors had modest VIFs (1.3–2.8) but were strongly inter-correlated, so I ran a standardized PCA. PC1, a socioeconomic deprivation index, explains 56.3% of the variance (loading on low income, poverty, minority and renter share). PC2, an age index driven by the share of residents aged 65+, explains 22.5%.\n2. Spatial autocorrelation. Using row-standardized Queen contiguity weights, I tested for clustering of LST with global Moran’s I, then classified each tract with Local Moran’s I (LISA) using 999 permutations and p &lt; 0.05:\n\\[\nI_i = \\frac{z_i}{m_2} \\sum_j w_{ij}\\, z_j, \\qquad m_2 = \\frac{\\sum_i z_i^2}{n}\n\\]\n3. Geographically weighted regression. All variables are z-standardized:\n\\[\n\\text{LST}_i = \\beta_0(u_i,v_i) + \\beta_1(u_i,v_i)\\,\\text{Canopy}_i + \\beta_2(u_i,v_i)\\,\\text{Deprivation}_i + \\beta_3(u_i,v_i)\\,\\text{Impervious}_i + \\varepsilon_i\n\\]\nA global OLS model assumes one set of coefficients for the whole county. GWR fits a separate weighted regression at every tract centroid with an adaptive bisquare kernel. The bandwidth was chosen by AICc, and local significance uses the multiple-testing-corrected critical t of da Silva & Fotheringham (2016)."
+  },
+  {
+    "objectID": "cook-county-heat.html#key-findings",
+    "href": "cook-county-heat.html#key-findings",
+    "title": "Cook County Heat Vulnerability",
+    "section": "Key Findings",
+    "text": "Key Findings\n\nHeat is strongly clustered\nGlobal Moran’s I = 0.746 (z = 49.6, p = 0.001). LISA identifies 321 heat hotspot tracts (High-High) and 273 coldspots (Low-Low). 81% of hotspots are inside Chicago, which has only 59% of the county’s tracts. They form a continuous belt across the West and Southwest Sides.\n\n\n\n\nHotspots (HH)\nColdspots (LL)\n\n\n\n\nMean summer LST\n41.2 °C\n34.8 °C\n\n\nTree canopy\n4.3%\n15.5%\n\n\nImpervious surface\n75.4%\n46.5%\n\n\nMedian household income (median tract)\n$66,800\n$88,400\n\n\nMinority (non-white) share\n72.8%\n47.0%\n\n\nShare of tracts above median deprivation\n63%\n30%\n\n\n\n\n\nHighest-risk neighborhoods\nThese are the 203 tracts that are both heat hotspots and above the county median on deprivation. They are concentrated in:\n\n\n\n\n\n\n\n\n\n\nCommunity area / municipality\nHigh-risk tracts\nMean LST\nMean canopy\nMean poverty\n\n\n\n\nSouth Lawndale (Little Village)\n18\n41.3 °C\n3.1%\n22.7%\n\n\nAustin\n17\n41.1 °C\n4.7%\n26.8%\n\n\nBelmont Cragin\n15\n42.0 °C\n4.2%\n14.8%\n\n\nCicero\n14\n41.2 °C\n3.5%\n14.2%\n\n\nNear West Side\n13\n40.4 °C\n2.1%\n30.1%\n\n\nBrighton Park\n10\n42.1 °C\n3.5%\n17.3%\n\n\nLower West Side (Pilsen)\n10\n41.6 °C\n1.0%\n13.9%\n\n\n\n\n\nGWR explains far more than a global model\n\n\n\nMetric\nGlobal OLS\nGWR\n\n\n\n\nR²\n0.524\n0.927\n\n\nAICc\n2,799.0\n914.3\n\n\nMean local R²\n—\n0.735\n\n\nBandwidth\n—\n50 nearest neighbors\n\n\n\n\nPavement is the strongest predictor (OLS β = +0.50 SD), significant locally in 42.5% of tracts.\nTree canopy cools, but unevenly. It has a significant cooling effect in 179 tracts, strongest in the Near West Side, New City, Lower West Side and Brighton Park. Several of these are also on the highest-risk list, so new canopy there would reach the hottest, most deprived residents where trees cool most effectively.\nDeprivation works through the built environment. On its own, deprivation is positively correlated with LST (r = +0.25), but after controlling for canopy and pavement its coefficient turns slightly negative (β = −0.07). Deprived neighborhoods are hotter because they have less canopy and more pavement."
+  },
+  {
+    "objectID": "cook-county-heat.html#limitations",
+    "href": "cook-county-heat.html#limitations",
+    "title": "Cook County Heat Vulnerability",
+    "section": "Limitations",
+    "text": "Limitations\n\nSurface ≠ air temperature. Landsat measures daytime (~10:30 a.m.) surface temperature, a proxy for urban heat island intensity rather than the air temperature people experience.\nCanopy is underestimated in dense urban areas by the 30 m NLCD product, so values are best used for comparison between tracts.\nCanopy and pavement are collinear (r = −0.87), and 50 tracts have a local condition number above 30. Multiscale GWR (MGWR) is a natural next step.\nEcological inference and a single summer. Results describe tract-level associations in 2022, not individual exposure or causation."
+  },
+  {
+    "objectID": "cook-county-heat.html#tools",
+    "href": "cook-county-heat.html#tools",
+    "title": "Cook County Heat Vulnerability",
+    "section": "Tools",
+    "text": "Tools\nPython (geopandas, rasterio, rasterstats, libpysal, esda, mgwr, statsmodels, scikit-learn), DuckDB Spatial, and a Leaflet + Chart.js dashboard. The results are also exposed to LLM agents through a read-only Model Context Protocol (MCP) server."
+  },
+  {
+    "objectID": "chicago-project.html#phase-1-environment-setup-and-spatial-standardization",
+    "href": "chicago-project.html#phase-1-environment-setup-and-spatial-standardization",
+    "title": "A Spatial Analysis of CTA Service Frequency and Socioeconomic Equity",
+    "section": "Phase 1: Environment Setup and Spatial Standardization",
+    "text": "Phase 1: Environment Setup and Spatial Standardization\nMy first phase of analysis involved standardizing the spatial scale and CRS of all datasets. To ensure accurate measurements, all spatial objects were projected from their original coordinate systems into UTM Zone 16N, which uses meters as its standard unit. In addition, tracts without median household income data were removed from the dataset to prevent errors in later statistical tests.\n\n\nCode\nlibrary(sf)\nlibrary(dplyr)\nlibrary(readr)\nlibrary(tidycensus)\nlibrary(units)\nlibrary(ggplot2)\nlibrary(biscale)\nlibrary(cowplot)\nlibrary(spdep)\n\n\n\n\nCode\ncentroids_raw &lt;- read_csv(\"https://www2.census.gov/geo/docs/reference/cenpop2020/tract/CenPop2020_Mean_TR17.txt\")\n\ncook_centroids &lt;- centroids_raw %&gt;%\n  filter(COUNTYFP == \"031\") %&gt;%\n  mutate(GEOID = paste0(STATEFP, COUNTYFP, TRACTCE)) %&gt;%\n  st_as_sf(coords = c(\"LONGITUDE\", \"LATITUDE\"), crs = 4326) %&gt;%\n  st_transform(26916) # Project to UTM Zone 16N\n\ncook_tracts &lt;- get_acs(\n  geography = \"tract\",\n  state = \"IL\",\n  county = \"Cook\",\n  variables = c(median_income = \"B19013_001\"),\n  geometry = TRUE,\n  year = 2022\n) %&gt;%\n  st_transform(26916)\n\ncook_tracts &lt;- cook_tracts %&gt;%\n  select(GEOID, median_income = estimate, geometry)\n\ncook_centroids &lt;- cook_centroids %&gt;%\n  left_join(st_drop_geometry(cook_tracts), by = \"GEOID\")"
+  },
+  {
+    "objectID": "chicago-project.html#phase-2-processing-transit-schedule-and-frequency-data",
+    "href": "chicago-project.html#phase-2-processing-transit-schedule-and-frequency-data",
+    "title": "A Spatial Analysis of CTA Service Frequency and Socioeconomic Equity",
+    "section": "Phase 2: Processing Transit Schedule and Frequency Data",
+    "text": "Phase 2: Processing Transit Schedule and Frequency Data\nTransit accessibility was modeled as a spatial metric based on distance from a stop and the service frequency at the stop. First, CTA schedule data was filtered to isolate weekday rush hour periods. These were defined as arrivals between 7 AM to 9 AM and 5 PM to 7 PM. The total number of arrivals was then aggregated and divided by four to calculate the average number of buses per hour.\n\n\nCode\n# Load CTA Stops\nstops &lt;- read_csv('data/stops.txt') # Adjust file path as needed\n\nstops_sf &lt;- st_as_sf(\n  stops,\n  coords = c(\"stop_lon\", \"stop_lat\"),\n  crs = 4326\n) %&gt;%\n  st_transform(26916)\n\nstop_times &lt;- read_csv('data/stop_times.txt') # Adjust file path as needed\n\npeak_times &lt;- stop_times %&gt;%\n  mutate(hour = as.integer(substr(arrival_time, 1, 2))) %&gt;%\n  filter((hour &gt;= 7 & hour &lt; 9) | (hour &gt;= 17 & hour &lt; 19))\n\nfreq_by_stop &lt;- peak_times %&gt;%\n  group_by(stop_id) %&gt;%\n  summarise(\n    total_peak_arrivals = n(),\n    .groups = \"drop\"\n  ) %&gt;%\n  mutate(buses_per_hour = total_peak_arrivals / 4)\n\nstops_with_freq &lt;- stops_sf %&gt;%\n  left_join(freq_by_stop, by = \"stop_id\") %&gt;%\n  filter(!is.na(buses_per_hour))"
+  },
+  {
+    "objectID": "chicago-project.html#phase-3-spatial-subsetting",
+    "href": "chicago-project.html#phase-3-spatial-subsetting",
+    "title": "A Spatial Analysis of CTA Service Frequency and Socioeconomic Equity",
+    "section": "Phase 3: Spatial Subsetting",
+    "text": "Phase 3: Spatial Subsetting\nTo isolate the analysis strictly to Chicago and avoid confounding variables from suburban transit systems, the study area was subsetted to Chicago city limits. This was achieved by first dissolving Chicago’s community area boundaries into a single unified polygon, then using a spatial intersection to filter Cook County tracts, population centroids, and CTA stops to those that fell within the city boundary.\n\n\nCode\n# Import community areas to establish the Chicago boundary\ncomm_areas &lt;- read_csv('data/Boundaries_-_Community_Areas_20260412.csv') # Adjust file path as needed\n\ncomm_areas_sf &lt;- st_as_sf(comm_areas, wkt = \"the_geom\", crs = 4326) %&gt;%\n  st_transform(26916)\n\n# Create a single merged polygon of Chicago\nchicago_boundary &lt;- st_union(comm_areas_sf)\n\n# Subset tracts, centroids, and stops to only those inside Chicago\ntracts_chi &lt;- cook_tracts[st_intersects(cook_tracts, chicago_boundary, sparse = FALSE), ]\ncentroids_chi &lt;- cook_centroids[st_intersects(cook_centroids, chicago_boundary, sparse = FALSE), ]\nstops_chi &lt;- stops_with_freq[st_intersects(stops_with_freq, chicago_boundary, sparse = FALSE), ]"
+  },
+  {
+    "objectID": "chicago-project.html#phase-4-accessibility-matrix-calculations",
+    "href": "chicago-project.html#phase-4-accessibility-matrix-calculations",
+    "title": "A Spatial Analysis of CTA Service Frequency and Socioeconomic Equity",
+    "section": "Phase 4: Accessibility Matrix Calculations",
+    "text": "Phase 4: Accessibility Matrix Calculations\nNext, a distance matrix was calculated between the population-weighted centroid of each census tract and every CTA stop in Chicago. The final accessibility index was calculated as follows:\n\\[A_{i} = \\sum_{j=1}^{n} \\frac{F_{j}}{d_{ij}^2}\\]\nHere, \\(F_{j}\\) represents service frequency at stop \\(j\\) and \\(d_{ij}\\) is that stop’s distance from the population-weighted centroid of tract \\(i\\). To prevent extreme mathematical inflation caused by squaring small distances in meters, the distance matrix was converted to kilometers. Two spatial thresholds were enforced during this calculation. Any stop further than 0.8 km from a tract’s centroid was excluded from the accessibility score to reflect an approximate ten-minute walk. Additionally, a minimum distance threshold of 0.1 km was enforced in order to prevent infinite accessibility spikes when a centroid lands directly on a stop coordinate. Because transit accessibility scores are highly skewed (with a high number of stops in the Loop especially), a log-transformation was applied to the accessibility index to normalize the data for linear regression.\n\n\nCode\n# 1. Calculate distance matrix (Outputs ~800 x 11,000 matrix in meters)\ndist_matrix &lt;- st_distance(centroids_chi, stops_chi)\n\n# 2. Convert meters to kilometers instantly without 'set_units' overhead\ndist_numeric &lt;- units::drop_units(dist_matrix) / 1000\n\n# 3. Enforce 800m (0.8km) walking threshold\ndist_numeric[dist_numeric &gt; 0.8] &lt;- NA\n\n# 4. Enforce 100m (0.1km) minimum distance threshold\ndist_numeric[dist_numeric &lt; 0.1] &lt;- 0.1\n\n# 5. Extract frequencies vector\nfrequencies &lt;- stops_chi$buses_per_hour\n\n# 6. Apply frequency-weighted gravity formula\naccess_scores &lt;- apply(dist_numeric, 1, function(dists) {\n  sum(frequencies / (dists^2), na.rm = TRUE)\n})\n\n# 7. Assign scores back to tracts\ncentroids_chi$transit_access &lt;- access_scores\n\ntracts_chi &lt;- tracts_chi %&gt;%\n  left_join(st_drop_geometry(centroids_chi %&gt;% select(GEOID, transit_access)), by = \"GEOID\")\n\n# 8. Filter missing data\ntracts_chi_clean &lt;- tracts_chi %&gt;%\n  filter(!is.na(median_income), !is.na(transit_access))"
+  },
+  {
+    "objectID": "chicago-project.html#statistical-tests",
+    "href": "chicago-project.html#statistical-tests",
+    "title": "A Spatial Analysis of CTA Service Frequency and Socioeconomic Equity",
+    "section": "Statistical Tests",
+    "text": "Statistical Tests\nA Spearman’s rank correlation was conducted to evaluate the association between median household income and log-transformed accessibility score, as it works well with non-normal data. The results indicate a very weak, positive correlation that was not statistically significant (\\(p = 0.65\\)). In addition, a simple linear regression model confirmed these findings. Median household income was not a significant predictor of transit accessibility and the model explained virtually none of the variance in the data (\\(R^{2} = 0.0003\\)).\n\n\nCode\n# Spearman Rank Correlation\ncor_test &lt;- cor.test(\n  tracts_chi_clean$median_income, \n  tracts_chi_clean$transit_access, \n  method = \"spearman\"\n)\nprint(cor_test)\n\n\n\n    Spearman's rank correlation rho\n\ndata:  tracts_chi_clean$median_income and tracts_chi_clean$transit_access\nS = 77504448, p-value = 0.6498\nalternative hypothesis: true rho is not equal to 0\nsample estimates:\n       rho \n0.01629196 \n\n\nCode\n# Simple Linear Regression\nregression_model &lt;- lm(log1p(transit_access) ~ median_income, data = tracts_chi_clean)\nsummary(regression_model)\n\n\n\nCall:\nlm(formula = log1p(transit_access) ~ median_income, data = tracts_chi_clean)\n\nResiduals:\n    Min      1Q  Median      3Q     Max \n-8.8449 -0.3653  0.0505  0.5459  2.6294 \n\nCoefficients:\n                Estimate Std. Error t value Pr(&gt;|t|)    \n(Intercept)    8.888e+00  7.032e-02 126.391   &lt;2e-16 ***\nmedian_income -3.950e-07  8.195e-07  -0.482     0.63    \n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\nResidual standard error: 0.9546 on 777 degrees of freedom\nMultiple R-squared:  0.0002989, Adjusted R-squared:  -0.0009877 \nF-statistic: 0.2324 on 1 and 777 DF,  p-value: 0.6299"
+  },
+  {
+    "objectID": "chicago-project.html#visualizations-and-scatterplots",
+    "href": "chicago-project.html#visualizations-and-scatterplots",
+    "title": "A Spatial Analysis of CTA Service Frequency and Socioeconomic Equity",
+    "section": "Visualizations and Scatterplots",
+    "text": "Visualizations and Scatterplots\nThe scatterplot below illustrates this lack of correlation. While accessibility scores varied drastically, this variance occurs acros all income brackets. Tracts with both the highest and lowest median incomes experience a wide range of transit service levels. The red regression line remains virtually flat across all income levels.\n\n\nCode\nggplot(tracts_chi_clean, aes(x = median_income, y = transit_access)) +\n  geom_point(alpha = 0.5, color = \"darkblue\") +\n  geom_smooth(method = \"lm\", color = \"red\", se = TRUE) +\n  scale_y_log10() + \n  scale_x_continuous(labels = scales::dollar_format()) +\n  theme_minimal() +\n  labs(\n    title = \"Correlation: Income vs. Transit Accessibility\",\n    x = \"Median Household Income\",\n    y = \"Transit Accessibility Score (Log Scale)\"\n  )"
+  },
+  {
+    "objectID": "chicago-project.html#bivariate-choropleth-map",
+    "href": "chicago-project.html#bivariate-choropleth-map",
+    "title": "A Spatial Analysis of CTA Service Frequency and Socioeconomic Equity",
+    "section": "Bivariate Choropleth Map",
+    "text": "Bivariate Choropleth Map\nTracts were classified into \\(3\\times3\\) quantiles based on income and accessibility to construct a bivariate choropleth map. This lack of correlation is visually apparent. Although there are pockets of transit inequity based on income—specifically in Chicago’s South Side—there are many more tracts that do not fit our hypothesis, either exhibiting high transit accessibility and low median income, or low accessibility and high income.\n\n\nCode\n# Classify into 3x3 quantiles\ndata_bivariate &lt;- bi_class(\n  tracts_chi_clean, \n  x = median_income, \n  y = transit_access, \n  style = \"quantile\", \n  dim = 3\n)\n\n# Generate Map\nmap_bi &lt;- ggplot() +\n  geom_sf(data = data_bivariate, aes(fill = bi_class), color = \"white\", size = 0.1, show.legend = FALSE) +\n  bi_scale_fill(pal = \"DkBlue\", dim = 3) + \n  theme_void() +\n  labs(title = \"Bivariate Map: Income and Transit Accessibility\")\n\n# Generate 3x3 Legend\nlegend_bi &lt;- bi_legend(pal = \"DkBlue\", dim = 3, xlab = \"Higher Income\", ylab = \"Higher Access\", size = 8)\n\n# Combine Map and Legend\nggdraw() +\n  draw_plot(map_bi, 0, 0, 1, 1) +\n  draw_plot(legend_bi, 0.1, 0.1, 0.25, 0.25)"
+  },
+  {
+    "objectID": "chicago-project.html#spatial-autocorrelation-lisa-analysis",
+    "href": "chicago-project.html#spatial-autocorrelation-lisa-analysis",
+    "title": "A Spatial Analysis of CTA Service Frequency and Socioeconomic Equity",
+    "section": "Spatial Autocorrelation (LISA Analysis)",
+    "text": "Spatial Autocorrelation (LISA Analysis)\nWhile transit accessibility is not strictly tied to income, a LISA analysis reveals that it is highly dependent on spatial geography. A Local Indicators of Spatial Association (LISA) analysis was conducted using local Moran’s I to allow for spatial categorization of statistically significant clusters.\nThe analysis identified distinct “High-high” clusters (transit hubs) located around the northern lakefront and downtown Loop area. Conversely, significant “Low-Low” clusters (transit deserts) can be found in peripheral areas of the city, specifically the far northwest and southwest sides. This suggests that transit inequity is less a result of income inequality and far more related to urban core vs. outer city spatial dynamics.\n\n\nCode\n# Create spatial weights matrix\nneighbors &lt;- poly2nb(tracts_chi_clean)\nweights &lt;- nb2listw(neighbors, style = \"W\", zero.policy = TRUE)\n\n# Run Local Moran's I\nlisa &lt;- localmoran(log1p(tracts_chi_clean$transit_access), weights, zero.policy = TRUE)\n\n# Categorize into High-High, Low-Low clusters\ntracts_chi_clean &lt;- tracts_chi_clean %&gt;%\n  mutate(\n    access_scaled = as.numeric(scale(log1p(transit_access))), \n    lag_access = as.numeric(lag.listw(weights, access_scaled, zero.policy = TRUE)), \n    lisa_p = as.numeric(lisa[, \"Pr(z != E(Ii))\"]), \n    \n    cluster = case_when(\n      lisa_p &gt; 0.05 ~ \"Not Significant\",\n      access_scaled &gt; 0 & lag_access &gt; 0 ~ \"High-High (Transit Hubs)\",\n      access_scaled &lt; 0 & lag_access &lt; 0 ~ \"Low-Low (Transit Deserts)\",\n      access_scaled &gt; 0 & lag_access &lt; 0 ~ \"High-Low (Spatial Outlier)\",\n      access_scaled &lt; 0 & lag_access &gt; 0 ~ \"Low-High (Spatial Outlier)\"\n    )\n  )\n\n# Plot the LISA Clusters\nggplot(tracts_chi_clean) +\n  geom_sf(aes(fill = cluster), color = \"white\", size = 0.1) +\n  scale_fill_manual(values = c(\n    \"High-High (Transit Hubs)\" = \"red\", \n    \"Low-Low (Transit Deserts)\" = \"blue\",\n    \"High-Low (Spatial Outlier)\" = \"pink\", \n    \"Low-High (Spatial Outlier)\" = \"lightblue\",\n    \"Not Significant\" = \"grey90\"\n  )) +\n  theme_void() +\n  labs(\n    title = \"LISA Clusters: Transit Accessibility in Chicago\",\n    fill = \"Cluster Type\"\n  )"
+  },
+  {
+    "objectID": "chicago-project.html#study-limitations",
+    "href": "chicago-project.html#study-limitations",
+    "title": "A Spatial Analysis of CTA Service Frequency and Socioeconomic Equity",
+    "section": "Study Limitations",
+    "text": "Study Limitations\nWhile this analysis provides a broad spatial overview of CTA service frequency, several limitations should be acknowledged.\n\n1. Exclusion of Regional Transit Networks\nThis study exclusively measured accessibility based on CTA service. Peripheral areas of Chicago may be better served by regional rail lines such as Metra and may not be as severe of transit deserts as our analysis suggests.\n\n\n2. Proximity vs. Connectivity:\nThe accessibility metric factors in distance and service frequency but fails to account for destination utility. A stop servicing 20 buses an hour is scored highly even if these buses don’t connect residents to meaningful services.\n\n\n3. Centroid Generalization:\nDistances were calculated using a single centroid for each census tract. In reality, a resident living on the edge of a large census tract might not be well-represented by the tract estimates used in this study.\n\n\n4. Physical Barriers and Walkability:\nThe distance matrix uses Euclidean distance, assuming people can walk in a straight line and ignoring physical barriers that alter true walking distance."
+  },
+  {
+    "objectID": "chicago-project.html#summary",
+    "href": "chicago-project.html#summary",
+    "title": "A Spatial Analysis of CTA Service Frequency and Socioeconomic Equity",
+    "section": "Summary",
+    "text": "Summary\nStatistical tests disproved the initial hypothesis, instead suggesting that there is no significant relationship between transit accessibility and median household income across Chicago census tracts. Instead of an income-based “transit divide,” the spatial and LISA analyses demonstrated that transit accessibility in Chicago is primarily a core-periphery geographic dynamic. High-frequency transit hubs are clustered around the lakefront and downtown while transit deserts can be found on Chicago’s far South and Northwest sides. To build on these findings, future studies should utilize street-network analysis instead of Euclidean distances , integrate block-level population data, and incorporate route utility and regional transit networks such as Metra and Pace to construct a comprehensive picture of transit equity in Chicago."
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Daniel Mend",
+    "section": "",
+    "text": "About Me\nI am a statistics undergraduate student at the University of Illinois-Urbana Champaign, graduating in Spring 2027. I use tools like R and Python frameworks to analyze complex datasets, ranging from simulating sports physics to uncovering spatial patterns in urban transit systems. Feel free to explore my projects below!\n\n\n\nFeatured Projects\n\n\n   \n    \n    \n      Order By\n      Default\n      \n        Date - Oldest\n      \n      \n        Date - Newest\n      \n      \n        Title\n      \n    \n  \n    \n      \n      \n    \n\n\n\n\n\nDate\n\n\nTitle\n\n\nDescription\n\n\n\n\n\n\nOct 14, 2026\n\n\nCook County Heat Vulnerability\n\n\nWhere summer heat clusters across Cook County’s 1,331 census tracts, who lives there, and how tree canopy and pavement shape it, using LISA and geographically weighted regression.\n\n\n\n\nAug 20, 2026\n\n\nSpray Chart Explorer 2017\n\n\nInteractive R Shiny application simulating MLB carry distance and weather adjustments.\n\n\n\n\nMay 4, 2026\n\n\nA Spatial Analysis of CTA Service Frequency and Socioeconomic Equity\n\n\nThis paper investigates the relationship between a Chicago census tract’s income and its access to public transit via the CTA.\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "park_effect_simulator_2017.html",
+    "href": "park_effect_simulator_2017.html",
+    "title": "Spray Chart Explorer 2017",
+    "section": "",
+    "text": "The Spray Chart Explorer 2017 is an interactive web application designed to visualize historic MLB spray chart data and simulate how changing atmospheric conditions influence hit carry distance. By combining Statcast batting data with local weather readings, this tool allows users to model hypothetical environmental scenarios for individual batters in the 2017 season."
+  },
+  {
+    "objectID": "park_effect_simulator_2017.html#project-overview",
+    "href": "park_effect_simulator_2017.html#project-overview",
+    "title": "Spray Chart Explorer 2017",
+    "section": "",
+    "text": "The Spray Chart Explorer 2017 is an interactive web application designed to visualize historic MLB spray chart data and simulate how changing atmospheric conditions influence hit carry distance. By combining Statcast batting data with local weather readings, this tool allows users to model hypothetical environmental scenarios for individual batters in the 2017 season."
+  },
+  {
+    "objectID": "park_effect_simulator_2017.html#data-sources-and-wrangling",
+    "href": "park_effect_simulator_2017.html#data-sources-and-wrangling",
+    "title": "Spray Chart Explorer 2017",
+    "section": "Data Sources and Wrangling",
+    "text": "Data Sources and Wrangling\n\nStatcast Batted Ball Data: Extracted 2017 MLB batting metrics including launch speed, launch angle, adjusted spray angle, and batter/pitcher handedness.\nNOAA Atmospheric Data: Matched game locations with hour-level environmental readings from the nearest NOAA weather station to capture air temperature, dew point, and air pressure."
+  },
+  {
+    "objectID": "park_effect_simulator_2017.html#statistical-modeling",
+    "href": "park_effect_simulator_2017.html#statistical-modeling",
+    "title": "Spray Chart Explorer 2017",
+    "section": "Statistical Modeling",
+    "text": "Statistical Modeling\nCarry distance is predicted using a Generalized Additive Model (GAM) with a Gaussian response variable: - Nonlinear Smooth Terms (mgcv::bam): Fits smooth spline functions for core contact physics (launch speed, launch angle, adjusted spray angle) and atmospheric factors (temperature, dew point, air pressure). - Parametric Terms: Incorporates linear categorical effects for batter stance (stand) and pitcher throwing arm (p_throws)."
+  }
+]

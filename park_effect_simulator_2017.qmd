@@ -1,0 +1,25 @@
+---
+title: "Spray Chart Explorer 2017"
+description: "Interactive R Shiny application simulating MLB carry distance and weather adjustments."
+author: "Daniel Mend, Addison Naylor, Ethan Ge"
+date: "2026-08-20"
+categories: [R, Shiny, GAM]
+format: html
+---
+
+## Project Overview
+
+The **Spray Chart Explorer 2017** is an interactive web application designed to visualize historic MLB spray chart data and simulate how changing atmospheric conditions influence hit carry distance. By combining Statcast batting data with local weather readings, this tool allows users to model hypothetical environmental scenarios for individual batters in the 2017 season.
+
+::: {.column-page}
+<iframe src="https://vm6wmt-daniel-mend.shinyapps.io/park_effect_simulator_2017/" width="100%" height="800px" style="border: 1px solid #e2e2e2; border-radius: 8px;"></iframe>
+:::
+
+## Data Sources and Wrangling
+1. **Statcast Batted Ball Data:** Extracted 2017 MLB batting metrics including launch speed, launch angle, adjusted spray angle, and batter/pitcher handedness.
+2. **NOAA Atmospheric Data:** Matched game locations with hour-level environmental readings from the nearest NOAA weather station to capture air temperature, dew point, and air pressure.
+
+## Statistical Modeling
+Carry distance is predicted using a **Generalized Additive Model (GAM)** with a Gaussian response variable:
+- **Nonlinear Smooth Terms (`mgcv::bam`):** Fits smooth spline functions for core contact physics (launch speed, launch angle, adjusted spray angle) and atmospheric factors (temperature, dew point, air pressure).
+- **Parametric Terms:** Incorporates linear categorical effects for batter stance (`stand`) and pitcher throwing arm (`p_throws`).

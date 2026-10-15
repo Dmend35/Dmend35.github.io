@@ -1,0 +1,16 @@
+# R / RStudio
+.Rhistory
+.RData
+.Rapp.history
+.Rproj.user/
+
+# Quarto build output and caches (the site is published to the gh-pages branch)
+/_site/
+/.quarto/
+*_cache/
+
+# Raw data and the standalone Cook County project (has its own repo)
+/data/
+/cook-county-spatial/
+
+.DS_Store

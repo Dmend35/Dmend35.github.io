@@ -1,0 +1,33 @@
+---
+title: "Daniel Mend"
+about:
+  template: jolla
+  links:
+    - icon: github
+      text: GitHub
+      href: https://github.com/Dmend35
+    - icon: linkedin
+      text: LinkedIn
+      href: https://linkedin.com/in/daniel-mend
+listing:
+  id: projects
+  contents: 
+    - "park_effect_simulator_2017.qmd"
+    - "chicago-project.qmd"
+    - "cook-county-heat.qmd"
+  type: table
+  sort: "date desc"
+  fields: [date, title, description]
+---
+
+### About Me
+I am a statistics undergraduate student at the University of Illinois-Urbana Champaign, graduating in Spring 2027.
+I use tools like R and Python frameworks to analyze complex datasets, ranging from simulating sports physics to uncovering spatial patterns in urban transit systems.
+Feel free to explore my projects below!
+
+---
+
+### Featured Projects
+
+::: {#projects}
+:::

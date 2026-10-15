@@ -1,0 +1,33 @@
+project:
+  type: website
+  output-dir: _site
+  render:
+    - index.qmd
+    - chicago-project.qmd
+    - park_effect_simulator_2017.qmd
+    - cook-county-heat.qmd
+  resources:
+    - cook-county-dashboard/
+
+website:
+  title: "Daniel Mend Portfolio"
+  navbar:
+    background: primary
+    left:
+      - text: "Home"
+        href: index.qmd
+      - text: "Projects"
+        menu:
+          - text: "CTA Spatial Equity Analysis"
+            href: chicago-project.qmd
+          - text: "MLB Park Effect Simulator 2017"
+            href: park_effect_simulator_2017.qmd
+          - text: "Cook County Heat Vulnerability"
+            href: cook-county-heat.qmd
+
+format:
+  html:
+    theme: cosmo
+    toc: true
+    code-fold: true
+    code-copy: true
